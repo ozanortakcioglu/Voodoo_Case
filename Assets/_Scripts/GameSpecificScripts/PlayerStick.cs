@@ -1,0 +1,85 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using DG.Tweening;
+
+public class PlayerStick : MonoBehaviour
+{
+    [Range(0.3f, 10f)] public float Length = 5f;
+    [SerializeField] private float scaleUpLerpSpeed;
+    [SerializeField] private GameObject stickModel;
+    [SerializeField] private GameObject fakeStickModel;
+    [SerializeField] private Transform leftSideTransform;
+    [SerializeField] private Transform rightSideTransform;
+
+    private float ActiveLength;
+
+    private void Start()
+    {
+        ActiveLength = Length;
+    }
+
+    private void Update()
+    {
+        setLength();
+    }
+
+    private void setLength()
+    {
+        ActiveLength = Mathf.Lerp(ActiveLength, Length, Time.deltaTime * scaleUpLerpSpeed);
+        stickModel.transform.localScale = new Vector3(stickModel.transform.localScale.x, ActiveLength, stickModel.transform.localScale.z);
+
+        leftSideTransform.localPosition = stickModel.transform.localPosition + new Vector3(-Length, 0, 0);
+        rightSideTransform.localPosition = stickModel.transform.localPosition + new Vector3(Length, 0, 0);
+    }
+
+    public void AddStick(float addAmount)
+    {
+        Length += addAmount;
+        fakeStickModel.transform.localScale = new Vector3(fakeStickModel.transform.localScale.z, Length - 0.01f, fakeStickModel.transform.localScale.z);
+        Taptic.Light();
+    }
+
+    public void CutStick(float cutterXPos)
+    {
+        bool isLeft = cutterXPos < transform.position.x ? true : false;
+
+        float _length = 0;
+
+        if (isLeft)
+            _length = Mathf.Abs(cutterXPos - leftSideTransform.position.x) * 0.5f;
+        else
+            _length = Mathf.Abs(cutterXPos - rightSideTransform.position.x) * 0.5f;
+
+        Length -= _length;
+        if (Length < 0.3f)
+            Length = 0.3f;
+        
+
+        var cuttedPart = Instantiate(stickModel, null);
+        cuttedPart.transform.position = stickModel.transform.position;
+        cuttedPart.transform.localScale = new Vector3(cuttedPart.transform.localScale.x, _length, cuttedPart.transform.localScale.z);
+
+        if (isLeft)
+        {
+            cuttedPart.transform.position = new Vector3((leftSideTransform.position.x + cutterXPos) / 2, cuttedPart.transform.position.y, cuttedPart.transform.position.z);
+            stickModel.transform.Translate(new Vector3(_length * 1, 0, 0), Space.World);
+            fakeStickModel.transform.Translate(new Vector3(_length * 1, 0, 0), Space.World);
+        }
+        else
+        {
+            cuttedPart.transform.position = new Vector3((rightSideTransform.position.x + cutterXPos) / 2, cuttedPart.transform.position.y, cuttedPart.transform.position.z);
+            stickModel.transform.Translate(new Vector3(-_length * 1, 0, 0), Space.World);
+            fakeStickModel.transform.Translate(new Vector3(-_length * 1, 0, 0), Space.World);
+        }
+
+        ActiveLength = Length;
+        fakeStickModel.transform.DOLocalMoveX(0, 0.5f).SetDelay(0.4f).SetEase(Ease.OutBack);
+        stickModel.transform.DOLocalMoveX(0, 0.5f).SetDelay(0.4f).SetEase(Ease.OutBack);
+        fakeStickModel.transform.localScale = new Vector3(fakeStickModel.transform.localScale.x, 0, fakeStickModel.transform.localScale.z);
+
+        cuttedPart.AddComponent<Rigidbody>().AddForce(Vector3.back, ForceMode.Impulse);
+
+        Taptic.Light();
+    }
+}

@@ -29,9 +29,7 @@ public class UIManager : MonoBehaviour
 {
     public UIPanels UIPanelsDictionary;
 
-    [Header("MAIN MENU PANEL ITEMS")]
-
-    [Header("LEVEL END PANEL")]
+    [Header("IN GAME PANEL ITEMS")]
 
 
 
