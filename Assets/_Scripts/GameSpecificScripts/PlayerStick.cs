@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
@@ -38,6 +36,27 @@ public class PlayerStick : MonoBehaviour
         Length += addAmount;
         fakeStickModel.transform.localScale = new Vector3(fakeStickModel.transform.localScale.z, Length - 0.01f, fakeStickModel.transform.localScale.z);
         Taptic.Light();
+    }
+
+    public void MeltStick()
+    {
+        float meltLenght = 0.1f;
+
+        for (int i = 0; i < 2; i++)
+        {
+            var cuttedPart = Instantiate(stickModel, null);
+            if (i % 2 == 0)
+                cuttedPart.transform.position = leftSideTransform.position + Vector3.right * meltLenght;
+            else
+                cuttedPart.transform.position = rightSideTransform.position + Vector3.left * meltLenght;
+
+            cuttedPart.transform.localScale = new Vector3(cuttedPart.transform.localScale.x, meltLenght, cuttedPart.transform.localScale.z);
+            cuttedPart.AddComponent<Rigidbody>().AddForce(Vector3.back, ForceMode.Impulse);
+            cuttedPart.AddComponent<SelfDestruct>().lifetime = 2;
+        }
+
+        Length -= meltLenght * 2;
+        ActiveLength = Length;
     }
 
     public void CutStick(float cutterXPos)
@@ -79,6 +98,7 @@ public class PlayerStick : MonoBehaviour
         fakeStickModel.transform.localScale = new Vector3(fakeStickModel.transform.localScale.x, 0, fakeStickModel.transform.localScale.z);
 
         cuttedPart.AddComponent<Rigidbody>().AddForce(Vector3.back, ForceMode.Impulse);
+        cuttedPart.AddComponent<SelfDestruct>().lifetime = 2;
 
         Taptic.Light();
     }

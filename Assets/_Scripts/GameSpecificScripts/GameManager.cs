@@ -1,18 +1,46 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public static GameManager Instance;
+
+
+    void Awake()
     {
-        
+
+        if (Instance == null)
+        {
+            Instance = this;
+            //DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    [HideInInspector]
+    public int GemCount
     {
-        
+        get
+        {
+            return PlayerPrefs.GetInt("GemCount", 0);
+        }
+        set
+        {
+
+            PlayerPrefs.SetInt("GemCount", value);
+            PlayerPrefs.Save();
+            UIManager.Instance.gemCount.text = value.ToString();
+        }
     }
+
+    public void ReloadLevel()
+    {
+        SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+    }
+
 }

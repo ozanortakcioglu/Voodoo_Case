@@ -30,7 +30,8 @@ public class UIManager : MonoBehaviour
     public UIPanels UIPanelsDictionary;
 
     [Header("IN GAME PANEL ITEMS")]
-
+    public GameObject gemIcon;
+    public TMPro.TMP_Text gemCount;
 
 
     public static UIManager Instance;
@@ -56,6 +57,10 @@ public class UIManager : MonoBehaviour
 
     #region Custom Events
 
+    public void ReloadOnClick()
+    {
+        GameManager.Instance.ReloadLevel();
+    }
 
 
     #endregion
@@ -66,6 +71,7 @@ public class UIManager : MonoBehaviour
     public void OnInGamePanelOpened()
     {
         Debug.Log("Setting Up Game Panel");
+        gemCount.text = GameManager.Instance.GemCount.ToString();
     }
 
     #endregion

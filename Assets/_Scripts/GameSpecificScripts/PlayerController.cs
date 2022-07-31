@@ -4,38 +4,53 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float leftLimit = -2f;
-    public float rightLimit = 2f;
-    public float forwardSpeed = 4f;
-    public float leftRightSpeed = 2;
+    [SerializeField] private float leftLimit = -2f;
+    [SerializeField] private float rightLimit = 2f;
+    [SerializeField] private float forwardSpeed = 4f;
+    [SerializeField] private float leftRightSpeed = 2;
 
     private float swipeSensivity;
-    private float maximumSensivity = 200f;
-    private Vector3 targetPos;
-    private bool controlsEnabled = true;
+    private float maxSwipeSensivity = 20000f;
+    private float targetX;
+
+    private Rigidbody rb;
+    private Animator animator;
+
+    private bool controlsEnabled = false;
+    private bool isStart = true;
 
     private void Start()
     {
+
         TouchHandler.onTouchBegan += TouchBegan;
         TouchHandler.onTouchMoved += TouchMoved;
         TouchHandler.onTouchEnded += TouchEnded;
 
+        rb = GetComponent<Rigidbody>();
+        animator = GetComponentInChildren<Animator>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        if(controlsEnabled)
+        if (controlsEnabled)
             Movement();
     }
 
     private void TouchBegan(TouchInput touch)
     {
-        targetPos = transform.position;
+        if (isStart)
+        {
+            isStart = false;
+            controlsEnabled = true;
+            UIManager.Instance.OpenPanel(PanelNames.InGame, true);
+            animator.SetTrigger("Run");
+        }
+        targetX = transform.position.x;
     }
 
     private void TouchEnded(TouchInput touch)
     {
-        targetPos = transform.position;
+        targetX = transform.position.x;
         swipeSensivity = 0f;
     }
 
@@ -43,17 +58,21 @@ public class PlayerController : MonoBehaviour
     {
         swipeSensivity = Mathf.Abs(touch.DeltaScreenPosition.x) * leftRightSpeed;
 
+        if (swipeSensivity > maxSwipeSensivity)
+            swipeSensivity = maxSwipeSensivity;
+
+
         if (touch.DeltaScreenPosition.x < 0)
-            targetPos = new Vector3(transform.position.x - swipeSensivity / 200f, transform.position.y, transform.position.z);
+            targetX = transform.position.x - swipeSensivity / 200f;
         if (touch.DeltaScreenPosition.x > 0)
-            targetPos = new Vector3(transform.position.x + swipeSensivity / 200f, transform.position.y, transform.position.z);
+            targetX = transform.position.x + swipeSensivity / 200f;
     }
 
     private void Movement()
-    {     
-        targetPos = new Vector3(Mathf.Clamp(targetPos.x, leftLimit, rightLimit), targetPos.y, targetPos.z);
-        transform.position = Vector3.MoveTowards(transform.position, targetPos, Time.unscaledDeltaTime * swipeSensivity / 2f);
-        transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, transform.position.y, transform.position.z + 1f), Time.unscaledDeltaTime * forwardSpeed);
+    {
+        targetX = Mathf.Clamp(targetX, leftLimit, rightLimit);
+
+        rb.velocity = new Vector3((targetX - transform.position.x) * 50, Mathf.Clamp(rb.velocity.y, -10, -0f), forwardSpeed);     
     }
 
     private void OnDestroy()

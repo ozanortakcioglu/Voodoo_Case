@@ -17,7 +17,7 @@ public class FollowerCamera : MonoBehaviour
         transform.DOKill();
         var pos = target.transform.position + offset;
         pos.x = 0;
-        transform.DOMove(pos, 0.1f).SetEase(Ease.Linear);
+        transform.DOMove(pos, 0.1f).SetEase(Ease.Linear).SetUpdate(UpdateType.Fixed);
     }
 
 }
