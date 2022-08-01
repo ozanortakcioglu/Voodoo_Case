@@ -67,12 +67,13 @@ public class PlayerStick : MonoBehaviour
         }
 
         Length -= meltLenght * 2;
-        if(Length <= 0)
+        ActiveLength = Length;
+        fakeStickModel.transform.localScale = new Vector3(fakeStickModel.transform.localScale.x, 0, fakeStickModel.transform.localScale.z);
+        if (Length <= 0)
         {
             Length = 0;
             PlayerController.Instance.Fail(false);
         }
-        ActiveLength = Length;
     }
 
     public void CutStick(float cutterXPos)

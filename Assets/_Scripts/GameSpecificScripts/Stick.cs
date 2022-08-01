@@ -21,7 +21,7 @@ public class Stick : MonoBehaviour, ICollectable
     public void Collect()
     {
         var ySize = transform.localScale.y;
-        FindObjectOfType<PlayerStick>().AddStick(ySize * 2);
+        FindObjectOfType<PlayerStick>().AddStick(ySize);
         //EffectsManager.PlayEffect(EffectTrigger.Match, )
         Destroy(gameObject);
     }

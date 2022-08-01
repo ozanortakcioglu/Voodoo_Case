@@ -102,7 +102,7 @@ public class PlayerController : MonoBehaviour
             //Fail
             Fail(true);
             playerStick.transform.SetParent(null);
-            playerStick.gameObject.AddComponent<Rigidbody>();
+            playerStick.gameObject.AddComponent<Rigidbody>().angularDrag = 1;
         }
     }
 
@@ -111,19 +111,25 @@ public class PlayerController : MonoBehaviour
         onGround = false;
         if (isEnd)
         {
-            onRail = false;
+            StartCoroutine(SetOnRailWithDelay(0, false));
             animator.ResetTrigger("Hang1");
             animator.SetTrigger("Hang2");
         }
         else
         {
-            onRail = true;
+            StartCoroutine(SetOnRailWithDelay(0.4f, true));
             leftRailXPos = _leftRailX;
             rightRailXPos = _rightRailX;
 
             animator.ResetTrigger("Hang2");
             animator.SetTrigger("Hang1");
         }
+    }
+
+    private IEnumerator SetOnRailWithDelay(float delay, bool _onRail)
+    {
+        yield return new WaitForSeconds(delay);
+        onRail = _onRail;
     }
 
     private void OnCollisionEnter(Collision collision)
