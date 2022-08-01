@@ -52,12 +52,17 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        OpenPanel(PanelNames.MainMenu);
+        OpenPanel(PanelNames.MainMenu, true);
     }
 
     #region Custom Events
 
     public void ReloadOnClick()
+    {
+        GameManager.Instance.ReloadLevel();
+    }
+
+    public void NextLevelOnClick()
     {
         GameManager.Instance.ReloadLevel();
     }

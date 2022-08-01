@@ -7,7 +7,6 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-
     void Awake()
     {
 
@@ -40,6 +39,12 @@ public class GameManager : MonoBehaviour
 
     public void ReloadLevel()
     {
+        SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void AdvanceLevel()
+    {
+        //level++
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
     }
 

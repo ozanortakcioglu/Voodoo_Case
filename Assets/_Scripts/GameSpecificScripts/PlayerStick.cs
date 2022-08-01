@@ -31,6 +31,14 @@ public class PlayerStick : MonoBehaviour
         rightSideTransform.localPosition = stickModel.transform.localPosition + new Vector3(Length, 0, 0);
     }
 
+    public Vector3 GetSidePosition(bool isLeft)
+    {
+        if (isLeft)
+            return leftSideTransform.position;
+        else
+            return rightSideTransform.position;
+    }
+
     public void AddStick(float addAmount)
     {
         Length += addAmount;
@@ -40,6 +48,9 @@ public class PlayerStick : MonoBehaviour
 
     public void MeltStick()
     {
+        if (Length <= 0)
+            return;
+
         float meltLenght = 0.1f;
 
         for (int i = 0; i < 2; i++)
@@ -56,6 +67,11 @@ public class PlayerStick : MonoBehaviour
         }
 
         Length -= meltLenght * 2;
+        if(Length <= 0)
+        {
+            Length = 0;
+            PlayerController.Instance.Fail(false);
+        }
         ActiveLength = Length;
     }
 
