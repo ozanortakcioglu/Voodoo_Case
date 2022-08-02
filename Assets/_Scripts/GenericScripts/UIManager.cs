@@ -7,13 +7,6 @@ using UnityEngine.UI;
 using System;
 using DG.Tweening;
 
-public enum PanelNames
-{
-    MainMenu,
-    InGame,
-    WinPanel,
-    LosePanel,
-}
 
 [System.Serializable]
 public class UIPanels : SerializableDictionaryBase<PanelNames, UIPanelAndSetup> { }
@@ -76,7 +69,7 @@ public class UIManager : MonoBehaviour
     public void OnInGamePanelOpened()
     {
         Debug.Log("Setting Up Game Panel");
-        gemCount.text = GameManager.Instance.GemCount.ToString();
+        gemCount.text = Utility.FormatBigNumbers(GameManager.Instance.GemCount);
     }
 
     #endregion

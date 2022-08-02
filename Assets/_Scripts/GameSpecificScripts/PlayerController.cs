@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour
 
     private bool isStart = true;
     private bool isFail = false;
+    private bool isWin = false;
 
     private void Awake()
     {
@@ -61,56 +62,75 @@ public class PlayerController : MonoBehaviour
         if (controlsEnabled)
         {
             Movement();
-            CheckFailOnRail();
+            CheckOnRail();
         }
+    }
+
+    public void Win()
+    {
+        isWin = true;
     }
 
     public void Fail(bool isFall)
     {
         if (isFail)
             return;
+
+        SoundManager.Instance.PlaySound(SoundTrigger.Fail);
         isFail = true;
         controlsEnabled = false;
         FindObjectOfType<FollowerCamera>().enabled = false;
-        if(isFall)
+        if (isFall)
+        {
+            GetComponentInChildren<Collider>().enabled = false;
             animator.SetTrigger("Fall");
+        }
         else
         {
             animator.SetTrigger("Death");
             rb.velocity = Vector3.zero;
         }
-        UIManager.Instance.OpenPanel(PanelNames.LosePanel, true, 2f);
+        UIManager.Instance.OpenPanel(PanelNames.LosePanel, true, 1f);
     }
 
     #region OnRail Functions
 
-    private void CheckFailOnRail()
+    private void CheckOnRail()
     {
         if (onGround || !onRail)
             return;
 
-        var xPos = transform.position.x;
         var playerStick = GetComponentInChildren<PlayerStick>();
+        if (playerStick == null)
+            return;
 
         var playetStickLeftSideX = playerStick.GetSidePosition(true).x - tolerance;
         var playetStickRightSideX = playerStick.GetSidePosition(false).x + tolerance;
 
+        var xPos = transform.position.x;
 
         if (xPos < leftRailXPos || xPos > rightRailXPos || 
             playetStickLeftSideX > leftRailXPos || playetStickRightSideX < rightRailXPos)
         {
-            //Fail
-            Fail(true);
+            if(!isWin) // Fail
+                Fail(true);
+            else
+            {
+                animator.SetTrigger("Fall");
+                controlsEnabled = false;
+            }
+            rb.constraints = RigidbodyConstraints.FreezePositionX;
             playerStick.transform.SetParent(null);
+            playerStick.GetComponentInChildren<Collider>().tag = "Untagged";
             playerStick.gameObject.AddComponent<Rigidbody>().angularDrag = 1;
         }
     }
 
     public void RailTriggered(bool isEnd, float _leftRailX, float _rightRailX)
-    {
-        onGround = false;
+    {        
         if (isEnd)
         {
+            onGround = false;
             StartCoroutine(SetOnRailWithDelay(0, false));
             animator.ResetTrigger("Hang1");
             animator.SetTrigger("Hang2");
@@ -130,19 +150,31 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         onRail = _onRail;
+        onGround = false;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.CompareTag(Tags.GROUND) && !onGround)
         {
+            EffectsManager.Instance.PlayEffect(EffectTrigger.Land, transform.position, Vector3.zero, Vector3.one, null);
+            Taptic.Light();
+
             onGround = true;
-            animator.ResetTrigger("Hang1");
-            animator.SetTrigger("Run");
+            if (isWin) //Win
+            {
+                SoundManager.Instance.PlaySound(SoundTrigger.Win);
+                animator.SetTrigger("Dance");
+                controlsEnabled = false;
+                UIManager.Instance.OpenPanel(PanelNames.WinPanel, true, 2f);
+            }
+            else
+            {
+                animator.ResetTrigger("Hang1");
+                animator.SetTrigger("Run");
+            }
         }
     }
-
-
     #endregion
 
 

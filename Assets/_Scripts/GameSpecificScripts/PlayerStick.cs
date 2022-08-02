@@ -51,7 +51,9 @@ public class PlayerStick : MonoBehaviour
         if (Length <= 0)
             return;
 
-        float meltLenght = 0.1f;
+        float meltLenght = 0.15f;
+        SoundManager.Instance.PlaySound(SoundTrigger.Cut);
+
 
         for (int i = 0; i < 2; i++)
         {
@@ -66,6 +68,7 @@ public class PlayerStick : MonoBehaviour
             cuttedPart.AddComponent<SelfDestruct>().lifetime = 2;
         }
 
+        Taptic.Light();
         Length -= meltLenght * 2;
         ActiveLength = Length;
         fakeStickModel.transform.localScale = new Vector3(fakeStickModel.transform.localScale.x, 0, fakeStickModel.transform.localScale.z);
@@ -82,6 +85,14 @@ public class PlayerStick : MonoBehaviour
 
         float _length = 0;
 
+        Vector3 rotation = new Vector3(0, 80, -90);
+        if (cutterXPos < transform.position.x)
+            rotation.y = 100;
+
+        SoundManager.Instance.PlaySound(SoundTrigger.Cut);
+        EffectsManager.Instance.PlayEffect(EffectTrigger.Cut, new Vector3(cutterXPos, transform.position.y, transform.position.z), rotation, Vector3.one * 0.4f, null);
+        Taptic.Light();
+
         if (isLeft)
             _length = Mathf.Abs(cutterXPos - leftSideTransform.position.x) * 0.5f;
         else
@@ -90,7 +101,7 @@ public class PlayerStick : MonoBehaviour
         Length -= _length;
         if (Length < 0.3f)
             Length = 0.3f;
-        
+
 
         var cuttedPart = Instantiate(stickModel, null);
         cuttedPart.transform.position = stickModel.transform.position;
@@ -117,6 +128,7 @@ public class PlayerStick : MonoBehaviour
         cuttedPart.AddComponent<Rigidbody>().AddForce(Vector3.back, ForceMode.Impulse);
         cuttedPart.AddComponent<SelfDestruct>().lifetime = 2;
 
-        Taptic.Light();
+
+
     }
 }

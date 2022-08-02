@@ -3,10 +3,6 @@ using RotaryHeart.Lib.SerializableDictionary;
 using TMPro;
 using System.Collections;
 
-public enum EffectTrigger
-{
-    Match,
-}
 
 [System.Serializable]
 public class Effects : SerializableDictionaryBase<EffectTrigger, GameObject> { }
@@ -39,8 +35,7 @@ public class EffectsManager : MonoBehaviour
         effect.transform.localScale = scale;
         effect.transform.parent = parent;
 
-        effect.AddComponent<SelfDestruct>().lifetime = 1.5f;
-
+        effect.AddComponent<SelfDestruct>().lifetime = 1f;
 
         if(color != null)
         {
@@ -57,7 +52,7 @@ public class EffectsManager : MonoBehaviour
         // Add Special Behavior Here
         switch (effectTrigger)
         {
-            case EffectTrigger.Match:
+            case EffectTrigger.Lightning:
 
                 break;
             default:

@@ -15,7 +15,6 @@ public class Gem : MonoBehaviour, ICollectable
                 Collect();
             }
         }
-
     }
 
     public void Collect()
@@ -30,7 +29,8 @@ public class Gem : MonoBehaviour, ICollectable
             GameManager.Instance.GemCount++;
             Destroy(flyingGem);
         });
-        //EffectsManager.Instance.PlayEffect(collectibles[name].effectTrigger, pos, Vector3.zero, Vector3.one, null);
+        EffectsManager.Instance.PlayEffect(EffectTrigger.Collectable, transform.position, new Vector3(-90, 0, 0), Vector3.one, null, Color.green);
+        SoundManager.Instance.PlaySound(SoundTrigger.Gem);
     }
 
 }

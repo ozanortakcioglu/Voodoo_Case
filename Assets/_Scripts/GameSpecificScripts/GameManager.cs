@@ -7,6 +7,22 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    [HideInInspector]
+    public int GemCount
+    {
+        get
+        {
+            return PlayerPrefs.GetInt("GemCount", 0);
+        }
+        set
+        {
+
+            PlayerPrefs.SetInt("GemCount", value);
+            PlayerPrefs.Save();
+            UIManager.Instance.gemCount.text = Utility.FormatBigNumbers(value);
+        }
+    }
+
     void Awake()
     {
 
@@ -21,20 +37,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    [HideInInspector]
-    public int GemCount
+    private void Start()
     {
-        get
-        {
-            return PlayerPrefs.GetInt("GemCount", 0);
-        }
-        set
-        {
-
-            PlayerPrefs.SetInt("GemCount", value);
-            PlayerPrefs.Save();
-            UIManager.Instance.gemCount.text = value.ToString();
-        }
+        Application.targetFrameRate = 60;
     }
 
     public void ReloadLevel()

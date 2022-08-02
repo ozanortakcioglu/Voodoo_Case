@@ -12,10 +12,9 @@ public class LavaGround : MonoBehaviour
         {
             isTriggered = true;
 
-            if (time > 0.1f)
+            if (time > 0.15f)
             {
                 time = 0;
-                Taptic.Light();
                 FindObjectOfType<PlayerStick>().MeltStick();
             }
         }

@@ -1,11 +1,6 @@
 ﻿using UnityEngine;
 using RotaryHeart.Lib.SerializableDictionary;
 
-public enum SoundTrigger
-{
-    Sound1,
-}
-
 [System.Serializable]
 public class Sounds : SerializableDictionaryBase<SoundTrigger, AudioSource> { }
 
