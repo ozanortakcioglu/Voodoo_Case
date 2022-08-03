@@ -15,7 +15,6 @@ public class Stick : MonoBehaviour, ICollectable
                 Collect();
             }
         }
-
     }
 
     public void Collect()

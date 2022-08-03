@@ -127,8 +127,5 @@ public class PlayerStick : MonoBehaviour
 
         cuttedPart.AddComponent<Rigidbody>().AddForce(Vector3.back, ForceMode.Impulse);
         cuttedPart.AddComponent<SelfDestruct>().lifetime = 2;
-
-
-
     }
 }

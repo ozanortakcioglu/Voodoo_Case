@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
@@ -32,7 +33,7 @@ public class PlayerController : MonoBehaviour
 
     private bool isStart = true;
     private bool isFail = false;
-    private bool isWin = false;
+    private bool canWin = false;
 
     private void Awake()
     {
@@ -68,7 +69,18 @@ public class PlayerController : MonoBehaviour
 
     public void Win()
     {
-        isWin = true;
+        if (!canWin)
+        {
+            canWin = true;
+            return;
+        }
+
+        SoundManager.Instance.PlaySound(SoundTrigger.Win);
+        animator.SetTrigger("Dance");
+        controlsEnabled = false;
+        transform.DORotate(Vector3.zero, 0.2f);
+        UIManager.Instance.OpenPanel(PanelNames.WinPanel, true, 2f);
+        FindObjectOfType<Finish>().SetEmisionToMultiplier(transform.position.z);
     }
 
     public void Fail(bool isFall)
@@ -76,6 +88,7 @@ public class PlayerController : MonoBehaviour
         if (isFail)
             return;
 
+        Taptic.Medium();
         SoundManager.Instance.PlaySound(SoundTrigger.Fail);
         isFail = true;
         controlsEnabled = false;
@@ -112,17 +125,19 @@ public class PlayerController : MonoBehaviour
         if (xPos < leftRailXPos || xPos > rightRailXPos || 
             playetStickLeftSideX > leftRailXPos || playetStickRightSideX < rightRailXPos)
         {
-            if(!isWin) // Fail
+            if(!canWin) // Fail
+            {
                 Fail(true);
+            }
             else
             {
                 animator.SetTrigger("Fall");
                 controlsEnabled = false;
             }
-            rb.constraints = RigidbodyConstraints.FreezePositionX;
             playerStick.transform.SetParent(null);
             playerStick.GetComponentInChildren<Collider>().tag = "Untagged";
             playerStick.gameObject.AddComponent<Rigidbody>().angularDrag = 1;
+            transform.DOMoveX(transform.position.x, 10f);
         }
     }
 
@@ -140,7 +155,6 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(SetOnRailWithDelay(0.4f, true));
             leftRailXPos = _leftRailX;
             rightRailXPos = _rightRailX;
-
             animator.ResetTrigger("Hang2");
             animator.SetTrigger("Hang1");
         }
@@ -161,12 +175,9 @@ public class PlayerController : MonoBehaviour
             Taptic.Light();
 
             onGround = true;
-            if (isWin) //Win
+            if (canWin) //Win
             {
-                SoundManager.Instance.PlaySound(SoundTrigger.Win);
-                animator.SetTrigger("Dance");
-                controlsEnabled = false;
-                UIManager.Instance.OpenPanel(PanelNames.WinPanel, true, 2f);
+                Win();
             }
             else
             {
@@ -181,7 +192,7 @@ public class PlayerController : MonoBehaviour
     #region Movement Functions
     private void TouchBegan(TouchInput touch)
     {
-        if (isStart)
+        if (isStart && !Utility.IsPointerOverUI_AnyCanvas())
         {
             isStart = false;
             controlsEnabled = true;

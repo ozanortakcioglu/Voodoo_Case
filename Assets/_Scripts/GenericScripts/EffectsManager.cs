@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using RotaryHeart.Lib.SerializableDictionary;
-using TMPro;
-using System.Collections;
 
 
 [System.Serializable]
@@ -12,7 +10,6 @@ public class EffectsManager : MonoBehaviour
     public Effects effects;
 
     public static EffectsManager Instance;
-
 
     private void Awake()
     {
@@ -35,7 +32,7 @@ public class EffectsManager : MonoBehaviour
         effect.transform.localScale = scale;
         effect.transform.parent = parent;
 
-        effect.AddComponent<SelfDestruct>().lifetime = 1f;
+        effect.AddComponent<SelfDestruct>().lifetime = 2f;
 
         if(color != null)
         {
@@ -48,16 +45,14 @@ public class EffectsManager : MonoBehaviour
             }
         }
 
-
         // Add Special Behavior Here
         switch (effectTrigger)
         {
             case EffectTrigger.Lightning:
-
+                effect.GetComponent<SelfDestruct>().lifetime = 0.5f;
                 break;
             default:
                 break;
-
         }
     }
 }

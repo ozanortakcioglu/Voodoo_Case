@@ -1,37 +1,37 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using RotaryHeart.Lib.SerializableDictionary;
 using UnityEngine.UI;
 using System;
-using DG.Tweening;
 
 
 [System.Serializable]
 public class UIPanels : SerializableDictionaryBase<PanelNames, UIPanelAndSetup> { }
 
-[System.Serializable]
-public class UIPanelAndSetup
-{
-    public GameObject UIPanel;
-    public UnityEvent UIPanelSetup;
-}
-
 public class UIManager : MonoBehaviour
 {
+    public static UIManager Instance;
+
     public UIPanels UIPanelsDictionary;
+
+    [Header("MAIN MENU CANVAS ITEMS")]
+    public GameObject settingsBar;
+    public Image vibrationImage;
+    public Image soundImage;
+    public Sprite soundOn;
+    public Sprite soundOff;
+    public Sprite vibrationOn;
+    public Sprite vibrationOff;
 
     [Header("IN GAME PANEL ITEMS")]
     public GameObject gemIcon;
     public TMPro.TMP_Text gemCount;
+    public TMPro.TMP_Text levelText;
 
-
-    public static UIManager Instance;
 
     void Awake()
     {
-
         if (Instance == null)
         {
             Instance = this;
@@ -43,12 +43,25 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        OpenPanel(PanelNames.MainMenu, true);
-    }
-
     #region Custom Events
+
+    public void ToggleSettings()
+    {
+        if (settingsBar.activeInHierarchy)
+            settingsBar.SetActive(false);
+        else
+            settingsBar.SetActive(true);
+    }
+    public void ToggleVibration()
+    {
+        GameManager.Instance.VibrationOn = !GameManager.Instance.VibrationOn;
+        vibrationImage.sprite = GameManager.Instance.VibrationOn ? vibrationOn : vibrationOff;
+    }
+    public void ToggleSound()
+    {
+        GameManager.Instance.SoundOn = !GameManager.Instance.SoundOn;
+        soundImage.sprite = GameManager.Instance.SoundOn ? soundOn : soundOff;
+    }
 
     public void ReloadOnClick()
     {
@@ -57,10 +70,8 @@ public class UIManager : MonoBehaviour
 
     public void NextLevelOnClick()
     {
-        GameManager.Instance.ReloadLevel();
+        GameManager.Instance.AdvanceLevel();
     }
-
-
     #endregion
 
 
@@ -68,10 +79,19 @@ public class UIManager : MonoBehaviour
 
     public void OnInGamePanelOpened()
     {
-        Debug.Log("Setting Up Game Panel");
+        Debug.Log("Setting Up InGame Panel");
         gemCount.text = Utility.FormatBigNumbers(GameManager.Instance.GemCount);
+        levelText.text = "Level" + (GameManager.Instance.Level + 1);
     }
 
+    public void OnMainMenuPanelOpened()
+    {
+        Debug.Log("Setting Up MainMenu Panel");
+        settingsBar.SetActive(false);
+        vibrationImage.sprite = GameManager.Instance.VibrationOn ? vibrationOn : vibrationOff;
+        soundImage.sprite = GameManager.Instance.SoundOn ? soundOn : soundOff;
+
+    }
     #endregion
 
 
@@ -178,5 +198,12 @@ public class UIManager : MonoBehaviour
 
     #endregion
 
+}
+
+[System.Serializable]
+public class UIPanelAndSetup
+{
+    public GameObject UIPanel;
+    public UnityEvent UIPanelSetup;
 }
 

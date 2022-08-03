@@ -1932,6 +1932,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82e55933c504d58409f796c2b85635dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  multipliers:
+  - {fileID: 6986996399672136934}
+  - {fileID: 8310938293618620069}
+  - {fileID: 8310938292980388701}
+  - {fileID: 8310938292630502848}
+  - {fileID: 8310938293131865843}
+  - {fileID: 8310938294111599452}
+  - {fileID: 8310938293742117825}
+  - {fileID: 8310938294537461751}
+  - {fileID: 8310938293160910159}
 --- !u!1 &1905532938145888547
 GameObject:
   m_ObjectHideFlags: 0

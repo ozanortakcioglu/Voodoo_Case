@@ -30,6 +30,7 @@ public class SoundManager : MonoBehaviour
             if (sounds[soundTrigger].isPlaying)
                 return;
         }
+
         else if (onlyIfNoSoundsPlaying)
         {
             foreach (var sound in sounds)

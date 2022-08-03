@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 public class Gem : MonoBehaviour, ICollectable
@@ -31,6 +29,7 @@ public class Gem : MonoBehaviour, ICollectable
         });
         EffectsManager.Instance.PlayEffect(EffectTrigger.Collectable, transform.position, new Vector3(-90, 0, 0), Vector3.one, null, Color.green);
         SoundManager.Instance.PlaySound(SoundTrigger.Gem);
+        Taptic.Light();
     }
 
 }
