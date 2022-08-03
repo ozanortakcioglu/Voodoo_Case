@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour
         }
 
         SoundManager.Instance.PlaySound(SoundTrigger.Win);
-        animator.SetTrigger("Dance");
+        animator.SetTrigger(AnimatorTrigger.DANCE);
         controlsEnabled = false;
         transform.DORotate(Vector3.zero, 0.2f);
         UIManager.Instance.OpenPanel(PanelNames.WinPanel, true, 2f);
@@ -96,11 +96,11 @@ public class PlayerController : MonoBehaviour
         if (isFall)
         {
             GetComponentInChildren<Collider>().enabled = false;
-            animator.SetTrigger("Fall");
+            animator.SetTrigger(AnimatorTrigger.FALL);
         }
         else
         {
-            animator.SetTrigger("Death");
+            animator.SetTrigger(AnimatorTrigger.DEATH);
             rb.velocity = Vector3.zero;
         }
         UIManager.Instance.OpenPanel(PanelNames.LosePanel, true, 1f);
@@ -131,11 +131,11 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                animator.SetTrigger("Fall");
+                animator.SetTrigger(AnimatorTrigger.FALL);
                 controlsEnabled = false;
             }
             playerStick.transform.SetParent(null);
-            playerStick.GetComponentInChildren<Collider>().tag = "Untagged";
+            playerStick.GetComponentInChildren<Collider>().tag = Tags.UNTAGGED;
             playerStick.gameObject.AddComponent<Rigidbody>().angularDrag = 1;
             transform.DOMoveX(transform.position.x, 10f);
         }
@@ -147,16 +147,16 @@ public class PlayerController : MonoBehaviour
         {
             onGround = false;
             StartCoroutine(SetOnRailWithDelay(0, false));
-            animator.ResetTrigger("Hang1");
-            animator.SetTrigger("Hang2");
+            animator.ResetTrigger(AnimatorTrigger.HANG1);
+            animator.SetTrigger(AnimatorTrigger.HANG2);
         }
         else
         {
             StartCoroutine(SetOnRailWithDelay(0.4f, true));
             leftRailXPos = _leftRailX;
             rightRailXPos = _rightRailX;
-            animator.ResetTrigger("Hang2");
-            animator.SetTrigger("Hang1");
+            animator.ResetTrigger(AnimatorTrigger.HANG2);
+            animator.SetTrigger(AnimatorTrigger.HANG1);
         }
     }
 
@@ -181,8 +181,8 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                animator.ResetTrigger("Hang1");
-                animator.SetTrigger("Run");
+                animator.ResetTrigger(AnimatorTrigger.HANG1);
+                animator.SetTrigger(AnimatorTrigger.RUN);
             }
         }
     }
@@ -197,7 +197,7 @@ public class PlayerController : MonoBehaviour
             isStart = false;
             controlsEnabled = true;
             UIManager.Instance.OpenPanel(PanelNames.InGame, true);
-            animator.SetTrigger("Run");
+            animator.SetTrigger(AnimatorTrigger.RUN);
         }
         targetX = transform.position.x;
     }

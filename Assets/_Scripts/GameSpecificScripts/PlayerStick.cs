@@ -58,6 +58,8 @@ public class PlayerStick : MonoBehaviour
         for (int i = 0; i < 2; i++)
         {
             var cuttedPart = Instantiate(stickModel, null);
+            cuttedPart.tag = Tags.UNTAGGED;
+
             if (i % 2 == 0)
                 cuttedPart.transform.position = leftSideTransform.position + Vector3.right * meltLenght;
             else
@@ -104,6 +106,7 @@ public class PlayerStick : MonoBehaviour
 
 
         var cuttedPart = Instantiate(stickModel, null);
+        cuttedPart.tag = Tags.UNTAGGED;
         cuttedPart.transform.position = stickModel.transform.position;
         cuttedPart.transform.localScale = new Vector3(cuttedPart.transform.localScale.x, _length, cuttedPart.transform.localScale.z);
 

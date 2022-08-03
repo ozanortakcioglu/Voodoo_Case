@@ -22,11 +22,12 @@ public class Gem : MonoBehaviour, ICollectable
         var iconImage = UIManager.Instance.gemIcon;
         GameObject flyingGem = Instantiate(iconImage, worldToScreen, Quaternion.identity, iconImage.transform.parent);
         
-        flyingGem.transform.DOMove(iconImage.transform.position, 0.5f).OnComplete(() =>
+        flyingGem.transform.DOMove(iconImage.transform.position, 0.75f).OnComplete(() =>
         {
             GameManager.Instance.GemCount++;
             Destroy(flyingGem);
         });
+
         EffectsManager.Instance.PlayEffect(EffectTrigger.Collectable, transform.position, new Vector3(-90, 0, 0), Vector3.one, null, Color.green);
         SoundManager.Instance.PlaySound(SoundTrigger.Gem);
         Taptic.Light();

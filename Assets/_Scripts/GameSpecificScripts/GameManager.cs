@@ -16,12 +16,12 @@ public class GameManager : MonoBehaviour
     {
         get
         {
-            return PlayerPrefs.GetInt("Level", 0);
+            return PlayerPrefs.GetInt(PlayerPrefStrings.LEVEL, 0);
         }
         set
         {
 
-            PlayerPrefs.SetInt("Level", value);
+            PlayerPrefs.SetInt(PlayerPrefStrings.LEVEL, value);
             PlayerPrefs.Save();
         }
     }
@@ -31,12 +31,12 @@ public class GameManager : MonoBehaviour
     {
         get
         {
-            return PlayerPrefs.GetInt("GemCount", 0);
+            return PlayerPrefs.GetInt(PlayerPrefStrings.GEM, 0);
         }
         set
         {
 
-            PlayerPrefs.SetInt("GemCount", value);
+            PlayerPrefs.SetInt(PlayerPrefStrings.GEM, value);
             PlayerPrefs.Save();
             UIManager.Instance.gemCount.text = Utility.FormatBigNumbers(value);
         }
@@ -46,8 +46,8 @@ public class GameManager : MonoBehaviour
     {
         get
         {
-            if (PlayerPrefs.HasKey("SoundOn"))
-                return PlayerPrefs.GetInt("SoundOn") != 0;
+            if (PlayerPrefs.HasKey(PlayerPrefStrings.SOUND))
+                return PlayerPrefs.GetInt(PlayerPrefStrings.SOUND) != 0;
             else
             {
                 SoundOn = true;
@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
         }
         set
         {
-            PlayerPrefs.SetInt("SoundOn", (value ? 1 : 0));
+            PlayerPrefs.SetInt(PlayerPrefStrings.SOUND, (value ? 1 : 0));
             PlayerPrefs.Save();
             _soundOn = value;
             AudioListener.pause = !_soundOn;
@@ -67,8 +67,8 @@ public class GameManager : MonoBehaviour
     {
         get
         {
-            if (PlayerPrefs.HasKey("VibrationOn"))
-                return PlayerPrefs.GetInt("VibrationOn") != 0;
+            if (PlayerPrefs.HasKey(PlayerPrefStrings.VIBRATION))
+                return PlayerPrefs.GetInt(PlayerPrefStrings.VIBRATION) != 0;
             else
             {
                 VibrationOn = true;
@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour
         }
         set
         {
-            PlayerPrefs.SetInt("VibrationOn", (value ? 1 : 0));
+            PlayerPrefs.SetInt(PlayerPrefStrings.VIBRATION, (value ? 1 : 0));
             PlayerPrefs.Save();
             _vibrationOn = value;
             Taptic.tapticOn = _vibrationOn;

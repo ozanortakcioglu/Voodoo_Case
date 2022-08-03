@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LavaGround : MonoBehaviour
@@ -12,7 +10,7 @@ public class LavaGround : MonoBehaviour
         {
             isTriggered = true;
 
-            if (time > 0.15f)
+            if (time > 0.1f)
             {
                 time = 0;
                 FindObjectOfType<PlayerStick>().MeltStick();
