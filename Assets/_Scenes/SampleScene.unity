@@ -11009,7 +11009,7 @@ MonoBehaviour:
   leftLimit: -3
   rightLimit: 3
   forwardSpeed: 8
-  leftRightSpeed: 2
+  leftRightSpeed: 10
 --- !u!1001 &1827921572
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12592,6 +12592,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 1
+  mainCamera: {fileID: 0}
 --- !u!4 &2073734327
 Transform:
   m_ObjectHideFlags: 0
