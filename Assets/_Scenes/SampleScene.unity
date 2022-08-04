@@ -11009,7 +11009,7 @@ MonoBehaviour:
   leftLimit: -3
   rightLimit: 3
   forwardSpeed: 8
-  leftRightSpeed: 8
+  leftRightSpeed: 2
 --- !u!1001 &1827921572
 PrefabInstance:
   m_ObjectHideFlags: 0

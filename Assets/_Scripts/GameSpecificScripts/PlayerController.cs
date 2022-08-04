@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
 
     private bool controlsEnabled = false;
     private float swipeSensivity;
-    private float maxSwipeSensivity = 2000f;
+    private float maxSwipeSensivity = 1;
     private float targetX;
     #endregion
 
@@ -210,16 +210,15 @@ public class PlayerController : MonoBehaviour
 
     private void TouchMoved(TouchInput touch)
     {
-        swipeSensivity = Mathf.Abs(touch.DeltaScreenPosition.x) * leftRightSpeed;
+        swipeSensivity = Mathf.Abs(touch.DeltaScreenPosition.x) * leftRightSpeed / touch.screenWidth;
 
         if (swipeSensivity > maxSwipeSensivity)
             swipeSensivity = maxSwipeSensivity;
 
-
         if (touch.DeltaScreenPosition.x < 0)
-            targetX = transform.position.x - swipeSensivity / 200f;
+            targetX = transform.position.x - swipeSensivity;
         if (touch.DeltaScreenPosition.x > 0)
-            targetX = transform.position.x + swipeSensivity / 200f;
+            targetX = transform.position.x + swipeSensivity;
     }
 
     private void Movement()

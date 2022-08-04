@@ -23,3 +23,11 @@ public enum PanelNames
     WinPanel,
     LosePanel,
 }
+
+public enum TouchPhase
+{
+    Started,
+    Moved,
+    Ended,
+    NotActive
+}
